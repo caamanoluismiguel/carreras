@@ -33,6 +33,7 @@
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         a { text-decoration: none; transition: all 0.3s ease; }
@@ -85,14 +86,15 @@
             margin: 10px; border-radius: var(--card-radius);
             overflow: hidden;
             background-color: #000;
+            margin-top: 80px; /* Offset fixed header */
         }
         .hero-bg-img {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 0;
-            /* Imagen: Ambiente ejecutivo moderno, desenfocado */
-            background-image: url('https://images.unsplash.com/photo-1577412647305-991150c7d163?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            /* REEMPLAZAR ESTA URL CON FOTO REAL DEL CAMPUS/ESTUDIANTES */
+            background-image: url('https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-position: center;
-            filter: brightness(0.5); 
+            filter: brightness(0.4); 
         }
         .hero-content {
             position: relative; z-index: 2; max-width: 900px; padding: 20px;
@@ -176,6 +178,14 @@
         }
         .card-link-btn:hover { background: #eee; }
 
+        /* --- TESTIMONIALS SECTION (NEW) --- */
+        .testimonials-section { padding: 100px 0; background-color: var(--bg-secondary); }
+        .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .testi-card { 
+            padding: 40px; border-radius: var(--card-radius); display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .quote-icon { font-family: serif; font-size: 4rem; line-height: 0.5; margin-bottom: 20px; }
+        
         /* --- FORM SECTION (LEAD MAGNET) --- */
         .report-section {
             padding: 100px 0; background: #000; color: #fff; position: relative; overflow: hidden;
@@ -197,7 +207,13 @@
             color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.3s;
         }
         .form-btn:hover { background: #2da84e; }
+        .form-btn:disabled { background: #444; cursor: not-allowed; }
         .form-note { font-size: 0.8rem; color: #666; margin-top: 15px; text-align: center; }
+
+        .success-message {
+            display: none; text-align: center; padding: 40px; animation: fadeIn 0.5s;
+        }
+        .success-icon { font-size: 3rem; color: var(--accent-green); margin-bottom: 20px; display: block; }
 
         .download-badge {
             background: var(--accent-green); color: #fff; padding: 8px 16px; border-radius: 20px; 
@@ -205,13 +221,13 @@
         }
 
         /* --- NETWORKING & SOCIAL PROOF --- */
-        .networking-section { padding: 120px 0; background: var(--bg-secondary); }
+        .networking-section { padding: 120px 0; background: var(--bg-main); }
         .networking-split { display: flex; align-items: center; gap: 60px; }
         .networking-visual { flex: 1; height: 500px; border-radius: var(--card-radius); overflow: hidden; }
         .networking-visual img { width: 100%; height: 100%; object-fit: cover; }
         .networking-text { flex: 1; }
         
-        .social-proof-section { padding: 80px 0; background: var(--white); overflow: hidden; }
+        .social-proof-section { padding: 80px 0; background: var(--white); overflow: hidden; border-top: 1px solid #eee; }
         .logo-marquee {
             white-space: nowrap; overflow: hidden; margin-bottom: 60px; position: relative;
             mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
@@ -223,13 +239,13 @@
             font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: #000;
         }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* --- MAP SECTION --- */
         .map-section { background: #0b0b0d; color: #fff; padding: 140px 0; position: relative; }
         .map-wrapper { max-width: 1000px; margin: 40px auto; position: relative; height: 500px; display: flex; align-items: center; justify-content: center; }
         .map-image-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* Imagen Abstracta Tech/Global */
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); 
             background-size: cover; background-position: center;
             opacity: 0.3; filter: grayscale(100%) contrast(1.2);
@@ -255,6 +271,7 @@
             .timeline-wrapper::before { display: none; }
             .timeline-step { flex: 0 0 45%; margin-bottom: 20px; }
             .report-grid { grid-template-columns: 1fr; }
+            .testimonial-grid { grid-template-columns: 1fr; } /* Stack testimonials */
         }
 
         @media (max-width: 768px) {
@@ -272,6 +289,9 @@
             .bento-grid { grid-template-columns: 1fr; }
             .bento-card { height: 450px; }
             
+            /* Mobile adjustment for overlay text visibility */
+            .card-overlay { background: linear-gradient(to top, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.2) 70%, transparent); }
+
             .networking-split { flex-direction: column; }
             .networking-visual { width: 100%; height: 300px; }
             
@@ -298,8 +318,8 @@
             <nav class="nav-links">
                 <a href="#inversion">Estrategia</a>
                 <a href="#carreras">Carreras</a>
+                <a href="#testimonios">Resultados</a>
                 <a href="#reporte">Reporte 2030</a>
-                <a href="#networking">Alumni</a>
             </nav>
         </div>
     </header>
@@ -325,8 +345,8 @@
                     <span class="comp-title" style="color:#999;">Opción A: Pregrado en el Extranjero</span>
                     <ul class="comp-list">
                         <li><span class="cross-icon">✕</span> Inversión Alta ($200k+) sin ROI inmediato local</li>
-                        <li><span class="cross-icon">✕</span> Desconexión del mercado local</li>
-                        <li><span class="cross-icon">✕</span> Retorno al país como "desconocido"</li>
+                        <li><span class="cross-icon">✕</span> <strong>Pérdida de Capital Relacional</strong> (Networking nulo en Panamá)</li>
+                        <li><span class="cross-icon">✕</span> Retorno al país como "desconocido" a los 24 años</li>
                     </ul>
                 </div>
                 <div class="comparison-card highlight">
@@ -334,7 +354,7 @@
                     <ul class="comp-list">
                         <li><span class="check-icon">✓</span> Optimización de capital para Posgrado futuro</li>
                         <li><span class="check-icon">✓</span> Construcción de <strong>Red de Poder Local</strong> desde el año 1</li>
-                        <li><span class="check-icon">✓</span> Pasantías en las empresas de sus futuros clientes</li>
+                        <li><span class="check-icon">✓</span> Pasantías en empresas como <strong>Copa, Mallol y P&G</strong></li>
                         <li><span class="check-icon">✓</span> Formación global aplicada a la realidad regional</li>
                     </ul>
                 </div>
@@ -399,7 +419,7 @@
                     <div class="card-content">
                         <span class="industry-tag">Manufactura & Tech</span>
                         <h3 class="card-title">Diseño Industrial</h3>
-                        <p class="card-desc">Innovación de producto. Crear patentes y soluciones para producción masiva.</p>
+                        <p class="card-desc">Innovación de producto. Crear patentes y directores de I+D.</p>
                         <div class="card-link-btn">Ver Plan de Estudios <span>›</span></div>
                     </div>
                 </a>
@@ -410,7 +430,7 @@
                     <div class="card-content">
                         <span class="industry-tag">Retail & Hospitality</span>
                         <h3 class="card-title">Arquitectura Interior</h3>
-                        <p class="card-desc">Psicología del consumo. Diseñar espacios que aumentan ventas y productividad.</p>
+                        <p class="card-desc">Consultoría de experiencia. Diseñar espacios que aumentan ventas y productividad.</p>
                         <div class="card-link-btn">Ver Plan de Estudios <span>›</span></div>
                     </div>
                 </a>
@@ -429,6 +449,77 @@
         </div>
     </section>
 
+    <section id="testimonios" class="testimonials-section">
+        <div class="container">
+            <div class="section-heading text-center">
+                <h2>Historias de Retorno de Inversión</h2>
+                <p>El éxito de nuestros egresados y la tranquilidad de sus familias son nuestra mejor métrica.</p>
+            </div>
+
+            <div class="testimonial-grid">
+                
+                <div class="testi-card" style="background: #fff;">
+                    <div>
+                        <div class="quote-icon" style="color: #0066CC;">“</div>
+                        <p style="font-size: 1.1rem; color: #1D1D1F; margin-bottom: 20px; font-style: italic;">
+                            El networking se hace donde vas a trabajar. Hoy, antes de graduarse, mi hijo ya colabora en proyectos reales en <strong>Mallol Arquitectos</strong>. La inversión retornó antes de lo esperado.
+                        </p>
+                    </div>
+                    <div class="author">
+                        <strong style="display: block; font-size: 1rem;">Ricardo A.</strong>
+                        <span style="font-size: 0.85rem; color: #86868B;">Director de Finanzas • Padre de Arquitecto</span>
+                    </div>
+                </div>
+
+                <div class="testi-card" style="background: #111; color: #fff;">
+                    <div>
+                        <div class="quote-icon" style="color: #34C759;">“</div>
+                        <p style="font-size: 1.1rem; color: #e5e5e5; margin-bottom: 20px; font-style: italic;">
+                            El diseño industrial es ingeniería de lujo. Esas bases me permitieron entrar a <strong>Puig</strong>, trabajando con estándares globales. La exigencia técnica de Isthmus fue mi mejor portafolio.
+                        </p>
+                    </div>
+                    <div class="author">
+                        <strong style="display: block; font-size: 1rem;">Javier M.</strong>
+                        <span style="font-size: 0.85rem; color: #999;">Industrial Designer en Puig • Egresado</span>
+                    </div>
+                </div>
+
+                <div class="testi-card" style="background: #fff;">
+                    <div>
+                        <div class="quote-icon" style="color: #0066CC;">“</div>
+                        <p style="font-size: 1.1rem; color: #1D1D1F; margin-bottom: 20px; font-style: italic;">
+                            Quería estabilidad para ella. Verla hoy liderando procesos de innovación en <strong>P&G</strong> me confirma que la creatividad bien enfocada es la habilidad más rentable.
+                        </p>
+                    </div>
+                    <div class="author">
+                        <strong style="display: block; font-size: 1rem;">Ana María V.</strong>
+                        <span style="font-size: 0.85rem; color: #86868B;">Gerente de Operaciones • Madre de Egresada</span>
+                    </div>
+                </div>
+
+                <div class="testi-card" style="background: #f0f0f2;">
+                    <div>
+                        <div class="quote-icon" style="color: #000;">“</div>
+                        <p style="font-size: 1.1rem; color: #1D1D1F; margin-bottom: 20px; font-style: italic;">
+                            Isthmus te quita el miedo a la escala real. La transición de las aulas a los sitios de obra de <strong>Varela</strong> fue natural. Entendí cómo se gestionan millones en inversión.
+                        </p>
+                    </div>
+                    <div class="author">
+                        <strong style="display: block; font-size: 1rem;">Sofia L.</strong>
+                        <span style="font-size: 0.85rem; color: #86868B;">Arquitecta de Proyectos • Egresada</span>
+                    </div>
+                </div>
+                
+                 <div class="testi-card" style="background: var(--accent-blue); color: white; justify-content: center; align-items: center; text-align: center;">
+                    <h3 style="margin-bottom: 15px;">¿Quiere conocer estos casos en persona?</h3>
+                    <p style="margin-bottom: 20px; color: rgba(255,255,255,0.9);">Agende una visita guiada al campus.</p>
+                    <a href="#reporte" class="btn-main" style="width: 100%;">Agendar Visita</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <section id="reporte" class="report-section">
         <div class="container">
             <div class="report-grid">
@@ -436,32 +527,48 @@
                     <span class="download-badge">Lead Magnet Exclusivo</span>
                     <h2 style="font-size: 3rem; margin-bottom: 20px; font-weight: 700; line-height: 1.1;">Reporte de Mercado Creativo 2030</h2>
                     <p style="font-size: 1.2rem; color: #ccc; margin-bottom: 30px;">
-                        ¿Qué industrias están contratando perfiles creativos en Panamá? ¿Cuál es la proyección salarial? 
-                        Descargue nuestro análisis de mercado y proyecciones para tomar una decisión informada.
+                        ¿Qué industrias están contratando perfiles creativos en Panamá? El 60% de los trabajos tradicionales desaparecerán. Descubra cuáles sobrevivirán.
                     </p>
                     <ul style="color: #999; margin-bottom: 30px;">
-                        <li style="margin-bottom: 10px;">• Datos salariales actualizados</li>
+                        <li style="margin-bottom: 10px;">• Datos salariales actualizados (Latam y Global)</li>
                         <li style="margin-bottom: 10px;">• Sectores de alta demanda 2026-2030</li>
                         <li>• Casos de éxito local</li>
                     </ul>
                 </div>
 
                 <div class="report-form-card">
-                    <h3 style="margin-bottom: 20px; font-size: 1.5rem;">Recibir Reporte PDF</h3>
-                    
-                    <form action="#" method="POST">
-                        <div class="form-group">
-                            <label for="parent-name">Nombre del Padre/Madre</label>
-                            <input type="text" id="parent-name" name="name" class="form-input" placeholder="Ej. Roberto Martínez" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="parent-email">Correo Electrónico</label>
-                            <input type="email" id="parent-email" name="email" class="form-input" placeholder="Ej. roberto@empresa.com" required>
-                        </div>
-                        <button type="submit" class="form-btn">Descargar Reporte Ahora</button>
-                    </form>
-                    
-                    <p class="form-note">El PDF se enviará automáticamente a su bandeja de entrada.</p>
+                    <div id="form-container">
+                        <h3 style="margin-bottom: 20px; font-size: 1.5rem;">Recibir Reporte PDF</h3>
+                        <form id="lead-form" action="#" method="POST">
+                            <div class="form-group">
+                                <label for="parent-name">Nombre del Padre/Madre</label>
+                                <input type="text" id="parent-name" name="name" class="form-input" placeholder="Ej. Roberto Martínez" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="parent-email">Correo Electrónico</label>
+                                <input type="email" id="parent-email" name="email" class="form-input" placeholder="Ej. roberto@empresa.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="student-interest">Interés Principal</label>
+                                <select id="student-interest" class="form-input" style="cursor: pointer;">
+                                    <option value="general">Aún no decidimos</option>
+                                    <option value="arq">Arquitectura</option>
+                                    <option value="ind">Diseño Industrial</option>
+                                    <option value="visual">Diseño Gráfico/Visual</option>
+                                    <option value="interior">Interiores</option>
+                                </select>
+                            </div>
+                            <button type="submit" id="submit-btn" class="form-btn">Descargar Reporte Ahora</button>
+                        </form>
+                        <p class="form-note">El PDF se enviará automáticamente a su bandeja de entrada.</p>
+                    </div>
+
+                    <div id="success-message" class="success-message">
+                        <span class="success-icon">✓</span>
+                        <h3 style="margin-bottom: 10px;">¡Solicitud Recibida!</h3>
+                        <p style="color: #ccc; margin-bottom: 20px;">Hemos enviado el Reporte 2030 a su correo electrónico. Por favor revise su bandeja de entrada.</p>
+                        <button onclick="location.reload()" class="btn-main" style="background: #333; color: #fff; font-size: 0.9rem; padding: 10px 20px;">Volver</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -477,13 +584,13 @@
                 <p style="font-size: 1.2rem; color: var(--text-light); margin-bottom: 30px;">
                     Isthmus es el punto de encuentro de la próxima generación de líderes empresariales.
                 </p>
-                <div class="feature-item">
-                    <h3>Networking Elite</h3>
-                    <p>Sus compañeros de hoy son sus socios de mañana en Panamá y Latam.</p>
+                <div class="feature-item" style="margin-bottom: 20px;">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 5px;">Networking Elite</h3>
+                    <p style="color: var(--text-light);">Sus compañeros de hoy son sus socios de mañana en Panamá y Latam.</p>
                 </div>
                 <div class="feature-item">
-                    <h3>Ecosistema Ciudad del Saber</h3>
-                    <p>Un entorno seguro y global donde la academia convive con la innovación real.</p>
+                    <h3 style="font-size: 1.2rem; margin-bottom: 5px;">Ecosistema Ciudad del Saber</h3>
+                    <p style="color: var(--text-light);">Un entorno seguro y global donde la academia convive con la innovación real.</p>
                 </div>
             </div>
         </div>
@@ -493,17 +600,17 @@
         <div class="container">
             <div class="logo-marquee">
                 <div class="logo-track">
-                    <span class="company-logo">Adidas</span>
+                    <span class="company-logo">Mallol</span>
                     <span class="company-logo">Copa Airlines</span>
-                    <span class="company-logo">Foster + Partners</span>
+                    <span class="company-logo">Puig</span>
                     <span class="company-logo">Dell</span>
                     <span class="company-logo">P&G</span>
-                    <span class="company-logo">Canal de Panamá</span>
+                    <span class="company-logo">Varela</span>
                     <span class="company-logo">Nike</span>
                     <span class="company-logo">Gensler</span>
                     <span class="company-logo">Samsung</span>
                     <span class="company-logo">Adidas</span> 
-                    <span class="company-logo">Copa Airlines</span>
+                    <span class="company-logo">Ciudad del Saber</span>
                 </div>
             </div>
         </div>
@@ -537,5 +644,40 @@
         </div>
     </footer>
 
-    </body>
+    <script>
+        // Lógica simple para simular envío de formulario (Feedback UX)
+        document.getElementById('lead-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submit-btn');
+            const originalText = btn.innerText;
+            
+            // Estado de carga
+            btn.disabled = true;
+            btn.innerText = "Enviando solicitud...";
+            btn.style.opacity = "0.7";
+
+            // Simular espera de red (1.5 segundos)
+            setTimeout(function() {
+                // Ocultar formulario y mostrar éxito
+                document.getElementById('form-container').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+            }, 1500);
+        });
+
+        // Smooth Scroll para enlaces internos (Safari support extra)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Cerrar menú móvil si está abierto
+                document.getElementById('mobile-menu-check').checked = false;
+            });
+        });
+    </script>
+
+</body>
 </html>
