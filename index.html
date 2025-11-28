@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script>
+        // Este script fuerza la creación de la función randomUUID si el navegador no la tiene
+        // o si está bloqueada por falta de HTTPS.
+        (function() {
+            if (!window.crypto) { window.crypto = {}; }
+            if (!window.crypto.randomUUID) {
+                console.log("Aplicando parche de seguridad para randomUUID...");
+                window.crypto.randomUUID = function() {
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                        return v.toString(16);
+                    });
+                };
+            }
+        })();
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Carreras con Futuro | Isthmus - Strategic Vision</title>
     <meta name="description" content="Guía estratégica para padres sobre el futuro profesional de sus hijos en la economía creativa.">
     
-    <script>
-        // Esto fuerza a que funcione crypto.randomUUID aunque no tengas HTTPS activo todavía
-        if (!window.crypto) window.crypto = {};
-        if (!window.crypto.randomUUID) {
-            window.crypto.randomUUID = function() {
-                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                    return v.toString(16);
-                });
-            };
-        }
-    </script>
-
     <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" async></script>
     <meta name="chatkit:domain_public_key" content="domain_pk_68e7da3b8b38819099c41f6a597d5cdf00560b7a3fd09ef4" />
 
@@ -113,7 +117,6 @@
         .hero-bg-img {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 0;
-            /* REEMPLAZAR ESTA URL CON FOTO REAL DEL CAMPUS/ESTUDIANTES */
             background-image: url('https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-position: center;
             filter: brightness(0.4); 
@@ -500,7 +503,6 @@
             </div>
 
             <div class="testimonial-grid">
-                
                 <div class="testi-card" style="background: #fff;">
                     <div>
                         <div class="quote-icon" style="color: #0066CC;">“</div>
@@ -552,8 +554,8 @@
                         <span style="font-size: 0.85rem; color: #86868B;">Arquitecta de Proyectos • Egresada</span>
                     </div>
                 </div>
-                
-                 <div class="testi-card" style="background: var(--accent-blue); color: white; justify-content: center; align-items: center; text-align: center;">
+
+                <div class="testi-card" style="background: var(--accent-blue); color: white; justify-content: center; align-items: center; text-align: center;">
                     <h3 style="margin-bottom: 15px;">¿Quiere conocer estos casos en persona?</h3>
                     <p style="margin-bottom: 20px; color: rgba(255,255,255,0.9);">Agende una visita guiada al campus.</p>
                     <a href="#reporte" id="trigger-agenda" onclick="openChat(event)" class="btn-main" style="width: 100%;">Agendar Visita</a>
@@ -693,20 +695,19 @@
     <button id="chat-launcher" aria-label="Abrir chat" aria-controls="chat-shell" aria-expanded="false">💬</button>
 
     <script>
-    // Función global para abrir chat desde botones externos
+    // Función pública para que el botón Agendar funcione
     function openChat(e) {
         if(e) e.preventDefault();
         const launcher = document.getElementById('chat-launcher');
-        if(launcher) launcher.click();
+        if(launcher) {
+            launcher.click();
+            console.log("Abriendo chat...");
+        }
     }
 
     (function(){
-        // =================================================================================
-        // IMPORTANTE: URL DE RAILWAY
-        // =================================================================================
+        // CONFIGURACIÓN
         const BACKEND_URL = "https://isthmus-production.up.railway.app"; 
-        // =================================================================================
-
         const SESSION_URL = `${BACKEND_URL}/api/chatkit/session`;
         const TOOLS_BASE  = `${BACKEND_URL}/tools`;
 
@@ -716,12 +717,16 @@
 
         const key = "ck_device_id";
         let deviceId = localStorage.getItem(key);
+        // Si no hay ID, lo generamos (usando el polyfill si hace falta)
         if (!deviceId) {
-            // Uso del Polyfill si no hay crypto nativo
             if (window.crypto && window.crypto.randomUUID) {
                 deviceId = window.crypto.randomUUID();
             } else {
-                deviceId = String(Date.now()) + Math.random().toString(16).slice(2);
+                // Fallback de emergencia manual
+                deviceId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
             }
             localStorage.setItem(key, deviceId);
         }
@@ -752,6 +757,7 @@
             return j.client_secret;
         }
 
+        // Lógica de Leads
         async function autoCreateLeadFromVisit(clean, noteExtra){
             const lang = (navigator.language || "es").toLowerCase().startsWith("es") ? "es" : "en";
             const payload = {
@@ -770,6 +776,7 @@
             return r.ok;
         }
 
+        // Herramientas del Cliente
         async function onClientTool({ name, params }) {
             const { tool, ...clean } = params || {};
 
@@ -852,7 +859,6 @@
                     setTimeout(()=>{ if (shell.style.display !== "block") document.getElementById('chat-launcher').classList.add("hidden"); }, 5000);
             } catch (e) {
                 console.error("Error al iniciar el chat:", e);
-                // Fallback silencioso o alerta si prefieres
             }
         });
 
